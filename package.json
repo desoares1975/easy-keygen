@@ -1,0 +1,26 @@
+{
+  "name": "easy-keygen",
+  "version": "0.1.0",
+  "description": "Easy to use ssh-keygen for Node.JS",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/desoares1975/easy-keygen.git"
+  },
+  "keywords": [
+    "ssh-keygen",
+    "easy",
+    "certificate",
+    "ssh",
+    "certs"
+  ],
+  "author": "desoares1975",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/desoares1975/easy-keygen/issues"
+  },
+  "homepage": "https://github.com/desoares1975/easy-keygen#readme"
+}
