@@ -52,23 +52,25 @@ console.log(path, 'PATH')
     if (stderr) {
       return cb(new Error(stderr));
     }
-
+console.log('11111111');
     return readFile(path);
   })
   .then(data => {
     privateKey = data.toString('utf-8');
-
+console.log('222222222222222');
     return readFile(`${path}.pub`);
   })
   .then(data => {
+console.log('333333333333333333');
     publicKey = data.toString('utf-8');
   })
   .then(() => {
+console.log('44444444444444444444444');
     if (deleteCerts) {
       unlink(path, () => {});
       unlink(`${path}.pub`, () => {});
     }
-
+console.log('55555555555555555555555555555');
     return cb(null, {privateKey, publicKey});
   })
   .catch(e => cb(e));
