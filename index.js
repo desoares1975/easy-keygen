@@ -8,6 +8,10 @@ const Bluebird = require('bluebird'),
       { readFile } = Bluebird.promisifyAll(require('fs'));
 
 module.exports = Bluebird.promisify((path, options, cb) => {
+  if (!path) {
+    path = join(os.tmpdir(), (+new Date()).toString());
+    deleteCerts = true;
+  }
   if (!cb && typeof options === 'function') {
     cb = options;
     options = {
@@ -25,11 +29,6 @@ module.exports = Bluebird.promisify((path, options, cb) => {
       privateKey,
       publicKey,
       deleteCerts;
-
-  if (!path) {
-    path = join(os.tmpdir(), +new Date());
-    deleteCerts = true;
-  }
 
   for (let option in options) {
     switch (option) {

@@ -1,6 +1,6 @@
 {
   "name": "easy-keygen",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "description": "Easy to use ssh-keygen for Node.JS",
   "main": "index.js",
   "scripts": {
