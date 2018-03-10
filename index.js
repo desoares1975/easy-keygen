@@ -43,7 +43,7 @@ module.exports = Bluebird.promisify((path, options, cb) => {
   if (os.platform() === 'win32') {
     path = path.replace(new RegExp(/\//, 'g'), '\\');
   }
-
+console.log(path, 'PATH')
   unlink(path, () => {});
   unlink(`${path}.pub`, () => {});
 
