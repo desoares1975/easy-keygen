@@ -3,9 +3,9 @@
 const Bluebird = require('bluebird'),
       os = require('os'),
       { join } = require('path'),
-      { exec } = Bluebird.promisifyAll(require('child_process')),
+      exec = Bluebird.promisifyAll(require('child_process').exec),
       { unlink } = require('fs'),
-      { readFile } = Bluebird.promisifyAll(require('fs'));
+      readFile = Bluebird.promisifyAll(require('fs').readFile);
 
 module.exports = Bluebird.promisify((path, options, cb) => {
   let deleteCerts;
