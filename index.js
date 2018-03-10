@@ -27,7 +27,7 @@ module.exports = Bluebird.promisify((path, options, cb) => {
   }
 
 
-  let strOptions,
+  let strOptions = '',
       privateKey,
       publicKey;
 
