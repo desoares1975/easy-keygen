@@ -8,69 +8,66 @@ const Bluebird = require('bluebird'),
       readFile = Bluebird.promisify(require('fs').readFile);
 
 module.exports = Bluebird.promisify((path, options, cb) => {
-  let deleteCerts;
+  let deleteCerts = false;
 
-  if (!path) {
+  cb = cb || options || path;
+
+  if (!cb || typeof cb !== 'function') {
+    throw new Error('Callback is not a function.');
+  }
+  if (Array.isArray(options)) {
+    return cb(new Error('Options must be an object or falsy.'));
+  }
+  if (typeof path !== 'string') {
     path = join(os.tmpdir(), (+new Date()).toString());
     deleteCerts = true;
   }
-  if (!cb && typeof options === 'function') {
-    cb = options;
-    options = {
-      'type': 'rsa',
-      'passPhrase': ''
-    };
-  }
+  
+  options = (typeof options === 'object' ? options : {'type': 'rsa', 'passphrase': ''});
+  options.type = options.type ? options.type : 'rsa';
+  options.passphrase = options.passphrase ? options.passphrase : '';
 
-  if (!cb) {
-    throw new Error('Callback is not a function.');
-  }
-
-
-  let strOptions = '',
+  let strOptions = ` -f ${path}`,
       privateKey,
       publicKey;
 
   for (let option in options) {
     switch (option) {
       case 'type': strOptions += ` -t ${options[option]}`; break;
-      case 'passPhrase': strOptions += ` -N "${options[option]}"`; break;
+      case 'passphrase': strOptions += ` -N "${options[option]}"`; break;
       case 'size': strOptions += ` -b ${options[option]}`; break;
     }
   }
 
-  
   if (os.platform() === 'win32') {
     path = path.replace(new RegExp(/\//, 'g'), '\\');
   }
-console.log(path, 'PATH')
-  unlink(path, () => {});
-  unlink(`${path}.pub`, () => {});
+
+  if (!options.prevent) {
+    unlink(path, () => {});
+    unlink(`${path}.pub`, () => {});
+  }
 
   exec(`ssh-keygen ${strOptions}`)
   .then((stdout, stderr) => {
     if (stderr) {
       return cb(new Error(stderr));
     }
-console.log('11111111');
     return readFile(path);
   })
   .then(data => {
     privateKey = data.toString('utf-8');
-console.log('222222222222222');
     return readFile(`${path}.pub`);
   })
   .then(data => {
-console.log('333333333333333333');
     publicKey = data.toString('utf-8');
   })
   .then(() => {
-console.log('44444444444444444444444');
     if (deleteCerts) {
       unlink(path, () => {});
       unlink(`${path}.pub`, () => {});
     }
-console.log('55555555555555555555555555555');
+
     return cb(null, {privateKey, publicKey});
   })
   .catch(e => cb(e));
