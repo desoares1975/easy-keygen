@@ -69,9 +69,6 @@ module.exports = Bluebird.promisify((path, options, cb) => {
       unlink(`${path}.pub`, () => {});
     }
 
-    return;
-  })
-  .then(() => {
     return cb(null, {privateKey, publicKey});
   })
   .catch(e => cb(e));
