@@ -76,6 +76,25 @@ You cam pass an object with one to four options
  - Prevent rewrite: {'prevent': true}. Will prevent the re-write of the file with the same name as the end of the path option.
  (The script may freeze case there is an file with the same name.)
 
+```js
+const keygen = require('easy-keygen');
+const fs = require('fs');
+
+keygen(`${__dirname}/cert`, {
+  'passphrase': 'any string does it',
+  'type': 'dsa',
+  'size': 3096,
+  'prevent': true
+})
+.then(keys => {
+  console.log(keys.privateKey, keys.publicKey);
+})
+.catch(e => console.log(e));
+/**
+  - This wil have a result similar to the first example, but the certificates will be saved as cert, and cert.pub, will
+  have 3096 bits oz size, and will be DSA type.
+*/
+```
 ## Testing
 ```sh
 $ npm test
