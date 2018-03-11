@@ -1,5 +1,10 @@
 # Easy-keygen
-Easy to use, multiplataform ssh-keygen for Node.JS 
+Easy to use, multiplataform ssh-keygen for Node.JS
+To work on Windows GitBash must be installed and the right bin folder must be available on the PATH
+environment variable.
+
+## Requirements
+  - ES2015
 
 ## Usage
 ```sh
@@ -45,13 +50,36 @@ qXnYJbO1/Gf7XqSi9haYVvxOajo/IyweK/gVMkLyyHq2zVWl414S
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDd1NrTuW1u0aPLQTfV8268kDNJlcCuBBW4A6Ug37/PzP13nhu/wupx9PfrHlO0tWlw2ibQ5sXcotu+yTvTsfNyfgFdx8lzT9apvsR+vBwiV8Lx/3vY3/kWFQxc6BJZc2QO0ql69DfJCa5SUO+neBon179lU0TFjJ1Gb9blGDXs05c//Ess+Fx0CSj9WXA4AIjXgTU3yZmY778zEAmJMBUfVsdUpuc34w4gROertagwnrNIz2PmXMXP8Lv8RAgfb/SpEwt4VLOBQ3hKvdMJnrUvRpvZx4B6xeM3bx+6gA64FGmrXncpjbrxtZXns5esdLnniZgU7Q5hRgAhW62fm/x someuser@Somecomputer-1234-123
 */
 ```
+With no arguments the key pair will no be persisted, to save the key pair you need to pass a path like beneth:
+```js
+const keygen = require('easy-keygen');
+const fs = require('fs');
 
-Options: Type, Passphrase and Size
-  - type:  default value is rsa
-  - passphrase default is none
-  - size default is 2048 (min is 1024)
+keygen(`${__dirname}/cert`)
+.then(keys => {
+  console.log(keys.privateKey, keys.publicKey);
+})
+.catch(e => console.log(e));
+/**
+  - This wil have the same result as the aobe, but the certificates will be saved as cert, and cert.pub
+*/
+```
+Warning: If the path for your cetificates are the same of any other files with the same name they will be erased unless you set options.prevent = true. In this case there will be an error.
 
-If the path for your cetificates ar the same of any other with the same name the previous will be erased unless you set options.prevent = true
+## Options
+You cam pass an object with one to four options
+ - Authentication type: {'type': 'rsa'}. Is the type of authentivation on the certificate
+ that will be generated. The default is RSA. (refere to ssh-keygen -? or [Choosing_the_authentication_key_type](https://wiki.archlinux.org/index.php/SSH_keys#Choosing_the_authentication_key_type)
+ for more information on SSH keys authentication types.)
+ - Passphrase: {'passphrase': 'secret phrase goes here'}. Is the passprase. It will be required for future decription if set.
+ - SSH key size: {'size': 1024}. Sets the size, in bits, of the key pair genareated, the bigger the size longer the it will take to genarate the key pair. (A long key pair with 9216 may take over 5 seconds, depending on the sistema resources.)
+ - Prevent rewrite: {'prevent': true}. Will prevent the re-write of the file with the same name as the end of the path option.
+ (The script may freeze case there is an file with the same name.)
 
-WARNING - WIP NO TESTS YET!!!!
-WARNING - DOCUMENTATION INCOMPLETE!!!
+## Testing
+```sh
+$ npm test
+/**
+ the dev dependencies must be installed.
+*/
+```

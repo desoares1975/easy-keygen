@@ -1,10 +1,10 @@
 {
   "name": "easy-keygen",
-  "version": "0.3.1",
+  "version": "1.0.0",
   "description": "Easy to use ssh-keygen for Node.JS",
   "main": "index.js",
   "scripts": {
-    "test": "npm test"
+    "test": "nodemon --exec mocha"
   },
   "repository": {
     "type": "git",
@@ -25,5 +25,10 @@
   "homepage": "https://github.com/desoares1975/easy-keygen#readme",
   "dependencies": {
     "bluebird": "^3.5.1"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^5.0.4"
   }
 }
