@@ -22,7 +22,7 @@ module.exports = Bluebird.promisify((path, options, cb) => {
     path = join(os.tmpdir(), (+new Date()).toString());
     deleteCerts = true;
   }
-  
+
   options = (typeof options === 'object' ? options : {'type': 'rsa', 'passphrase': ''});
   options.type = options.type ? options.type : 'rsa';
   options.passphrase = options.passphrase ? options.passphrase : '';
@@ -56,11 +56,11 @@ module.exports = Bluebird.promisify((path, options, cb) => {
     return readFile(path);
   })
   .then(data => {
-    privateKey = data.toString('utf-8');
+    privateKey = (options.buffer ? data : data.toString('utf-8'));
     return readFile(`${path}.pub`);
   })
   .then(data => {
-    publicKey = data.toString('utf-8');
+    publicKey = (options.buffer ? data : data.toString('utf-8'));
   })
   .then(() => {
     if (deleteCerts) {

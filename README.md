@@ -1,10 +1,15 @@
 # Easy-keygen
-Easy to use, multiplataform ssh-keygen for Node.JS
-To work on Windows GitBash must be installed and the right bin folder must be available on the PATH
-environment variable.
+Easy to use, multiplataform ssh-keygen for Node.JS. Can return the keys as string or as buffer.
 
 ## Requirements
+
+### Linux /MaOS
   - ES2015
+
+### Windows
+  - [GitBash](https://gitforwindows.org/)
+  - "C:\Program Files\Git\usr\bin" must be available
+  on the PATH environment variable.
 
 ## Usage
 ```sh
@@ -47,10 +52,15 @@ ObkbuQKBgG+TU8G75eFqgxt+062uAhtgGy/mcl8GQOKLBKGWm5lsZUu7uwqMJj5L
 /vfevM5muIOoYsTVvBISJRO01XKOtmXqot1kq96UdNDgFZ6fi9jM9/oLspTvNJ7U
 qXnYJbO1/Gf7XqSi9haYVvxOajo/IyweK/gVMkLyyHq2zVWl414S
 -----END RSA PRIVATE KEY-----
-ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDd1NrTuW1u0aPLQTfV8268kDNJlcCuBBW4A6Ug37/PzP13nhu/wupx9PfrHlO0tWlw2ibQ5sXcotu+yTvTsfNyfgFdx8lzT9apvsR+vBwiV8Lx/3vY3/kWFQxc6BJZc2QO0ql69DfJCa5SUO+neBon179lU0TFjJ1Gb9blGDXs05c//Ess+Fx0CSj9WXA4AIjXgTU3yZmY778zEAmJMBUfVsdUpuc34w4gROertagwnrNIz2PmXMXP8Lv8RAgfb/SpEwt4VLOBQ3hKvdMJnrUvRpvZx4B6xeM3bx+6gA64FGmrXncpjbrxtZXns5esdLnniZgU7Q5hRgAhW62fm/x someuser@Somecomputer-1234-123
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDd1NrTuW1u0aPLQTfV8268kDNJlcCuBBW4A6Ug37/PzP13nhu/
+wupx9PfrHlO0tWlw2ibQ5sXcotu+yTvTsfNyfgFdx8lzT9apvsR+vBwiV8Lx/3vY3/kWFQxc6BJZc2QO0ql69DfJ
+Ca5SUO+neBon179lU0TFjJ1Gb9blGDXs05c//Ess+Fx0CSj9WXA4AIjXgTU3yZmY778zEAmJMBUfVsdUpuc34w4g
+ROertagwnrNIz2PmXMXP8Lv8RAgfb/SpEwt4VLOBQ3hKvdMJnrUvRpvZx4B6xeM3bx+6gA64FGmrXncpjbrxtZXn
+s5esdLnniZgU7Q5hRgAhW62fm/x someuser@Somecomputer-1234-123
 */
 ```
-With no arguments the key pair will no be persisted, to save the key pair you need to pass a path like beneth:
+With no arguments the key pair will no be persisted, to save the key pair you need to pass
+a path like beneth:
 ```js
 const keygen = require('easy-keygen');
 const fs = require('fs');
@@ -61,19 +71,28 @@ keygen(`${__dirname}/cert`)
 })
 .catch(e => console.log(e));
 /**
-  - This wil have the same result as the aobe, but the certificates will be saved as cert, and cert.pub
+  - This wil have the same result as the aobe, but the certificates will be saved as cert,
+  and cert.pub
 */
 ```
-Warning: If the path for your cetificates are the same of any other files with the same name they will be erased unless you set options.prevent = true. In this case there will be an error.
+Warning: If the path for your cetificates are the same of any other files with the same name
+they will be erased unless you set options.prevent = true. In this case there will be an error.
 
 ## Options
-You cam pass an object with one to four options
+You cam pass an object with one to five options
+ - Buffer: {'buffer': true}. Will return the key im buffer format, instead of string. Usefull for
+ payload generation.
  - Authentication type: {'type': 'rsa'}. Is the type of authentivation on the certificate
- that will be generated. The default is RSA. (refere to ssh-keygen -? or [Choosing_the_authentication_key_type](https://wiki.archlinux.org/index.php/SSH_keys#Choosing_the_authentication_key_type)
+ that will be generated. The default is RSA. (refere to ssh-keygen -? or
+ [Choosing_the_authentication_key_type](https://wiki.archlinux.org/index.php/SSH_keys#Choosing_the_authentication_key_type)
  for more information on SSH keys authentication types.)
- - Passphrase: {'passphrase': 'secret phrase goes here'}. Is the passprase. It will be required for future decription if set.
- - SSH key size: {'size': 1024}. Sets the size, in bits, of the key pair genareated, the bigger the size longer the it will take to genarate the key pair. (A long key pair with 9216 may take over 5 seconds, depending on the sistema resources.)
- - Prevent rewrite: {'prevent': true}. Will prevent the re-write of the file with the same name as the end of the path option.
+ - Passphrase: {'passphrase': 'secret phrase goes here'}. Is the passprase. It will be required
+ for future decription if set.
+ - SSH key size: {'size': 1024}. Sets the size, in bits, of the key pair genareated, the bigger the
+ size longer the it will take to genarate the key pair. (A long key pair with 9216 may take over 5 seconds,
+ depending on the sistema resources.)
+ - Prevent rewrite: {'prevent': true}. Will prevent the re-write of the file with the same name as the end
+ of the path option.
  (The script may freeze case there is an file with the same name.)
 
 ```js
@@ -95,6 +114,27 @@ keygen(`${__dirname}/cert`, {
   have 3096 bits oz size, and will be DSA type.
 */
 ```
+To return a buffer data
+```js
+const keygen = require('easy-keygen');
+const fs = require('fs');
+
+keygen(`${__dirname}/cert`, {
+  'buffer': true
+})
+.then(keys => {
+  console.log(keys.privateKey, keys.publicKey);
+})
+.catch(e => console.log(e));
+/**
+  Will return something like:
+  <Buffer 2d 2d 2d 2d 2d 42 45 47 49 4e 20 52 53 41 20 50 52 49 56 41 54 45 20 4b 45 59 2d 2d 2d 2d 2d 0a
+  4d 49 49 45 6f 77 49 42 41 41 4b 43 41 51 45 41 73 6b ... > <Buffer 73 73 68 2d 72 73 61 20 41 41 41 41
+  42 33 4e 7a 61 43 31 79 63 32 45 41 41 41 41 44 41 51 41 42 41 41 41 42 41 51 43 79 53 69 39 65 4a 4a 31
+  50 76 68 ... >
+*/
+```
+
 ## Testing
 ```sh
 $ npm test
